@@ -10,8 +10,12 @@ I am using python (and probably selenium)
 
 The challenge file, that can be downloaded from the site needs to be .xls instead of .xlsx for this to work
 
+also, downloading the file (and in this case converting it to xls) could be automated, but won't be in this case
+
 ### TODO
 
 Refactor, make it look pretty
 
 find a way to reliably select the correct element
+
+make it faster, it's pretty slow right now (and it doesn't work!!!)
