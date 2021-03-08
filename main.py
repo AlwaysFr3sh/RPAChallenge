@@ -1,25 +1,26 @@
 #!/usr/bin/env python3
 
+import time
+
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import pandas as pd
 
-def Test(driver):
-  driver.get("https://google.com")
-  searchBar = driver.find_element_by_name("q")
-  searchBar.send_keys("time in melbourne")
-  searchBar.send_keys(Keys.RETURN)
-
+# presses start button
 def PressStartButton(driver):
   submitButton = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[1]/div[6]/button") 
   print("pressed submit button")
   submitButton.send_keys(Keys.RETURN)
 
+#presses submit button
 def PressSubmitButton(driver):
   submitButton = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/input")
   submitButton.send_keys(Keys.RETURN)
 
-def FillForm(driver):
+# returns the form elements we need to fill 
+def GetElements(driver):
   # gather elements
+  # TODO: this is terrible, put paths in a file and read into list with a loop (or list comprehension?)
   firstName = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/div/div[1]/rpa1-field/div/input")
   lastName = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/div/div[2]/rpa1-field/div/input")
   role = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/div/div[3]/rpa1-field/div/input")
@@ -28,25 +29,49 @@ def FillForm(driver):
   email = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/div/div[6]/rpa1-field/div/input")
   address = driver.find_element_by_xpath("/html/body/app-root/div[2]/app-rpa1/div/div[2]/form/div/div[7]/rpa1-field/div/input")
 
-  # send input
-  firstName.send_keys("hello")
-  lastName.send_keys("test")
-  role.send_keys("test")
-  company.send_keys("test")
-  phoneNumber.send_keys("test")
-  email.send_keys("test")
-  address.send_keys("test")
+  elements = []
+  elements.append(firstName)
+  elements.append(lastName)
+  elements.append(role)
+  elements.append(company)
+  elements.append(phoneNumber)
+  elements.append(email)
+  elements.append(address)
 
-def main(driver):
+  return elements
+
+# fills form, inputs is array of First name, last name etc
+def FillForm(driver, row):
+  elements = GetElements(driver)
+
+  # send data 
+  for element, data in zip(elements, row):
+    time.sleep(1) # TODO: don't forget this is here
+    element.send_keys(data)
+
+# gets data from excel file and returns it in a 2d list
+def GetData(path):
+  data = pd.read_excel(r''.join(path))
+  ret = []
+  for i, row in data.iterrows():
+    ret.append([row["First Name"], row["Last Name "], row["Company Name"], row["Role in Company"], row["Address"], row["Email"], row["Phone Number"]])
+
+  return ret
+
+# main
+def main(driver, dataPath):
   driver.get("http://rpachallenge.com")
-  PressSubmitButton(driver)
-  for i in range(5):
+  PressStartButton(driver)
+
+  inputData = GetData(dataPath)
+
+  for row in inputData:
     PressSubmitButton(driver)
-    FillForm(driver)
+    FillForm(driver, row)
   
 
-
+# need to init driver here to avoid it getting caught by the garbage collector
 if __name__ == "__main__":
   path = "/Users/tomhollo/Documents/personal projects/RPAChallenge/chromedriver"
   driver = webdriver.Chrome(path)
-  main(driver)
+  main(driver, "challenge2.xls")
