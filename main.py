@@ -2,7 +2,7 @@
 
 import time
 
-from selenium import webdriver
+from selenium import webdriver 
 from selenium.webdriver.common.keys import Keys
 import pandas as pd
 
@@ -46,7 +46,6 @@ def FillForm(driver, row):
 
   # send data 
   for element, data in zip(elements, row):
-    time.sleep(1) # TODO: don't forget this is here
     element.send_keys(data)
 
 # gets data from excel file and returns it in a 2d list
@@ -66,8 +65,8 @@ def main(driver, dataPath):
   inputData = GetData(dataPath)
 
   for row in inputData:
-    PressSubmitButton(driver)
     FillForm(driver, row)
+    PressSubmitButton(driver)
   
 
 # need to init driver here to avoid it getting caught by the garbage collector
@@ -75,3 +74,7 @@ if __name__ == "__main__":
   path = "/Users/tomhollo/Documents/personal projects/RPAChallenge/chromedriver"
   driver = webdriver.Chrome(path)
   main(driver, "challenge2.xls")
+  # so we can see the time we got
+  time.sleep(3)
+  # closes browser 'gracefully'
+  driver.quit()
