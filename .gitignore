@@ -1,3 +1,10 @@
+# excel file
+*.xlsx
+*.xls
+
+# driver path
+driverpath.txt
+
 # ignore chromedriver executeable
 chromedriver
 
