@@ -78,7 +78,6 @@ def main(driver, dataPath):
 # need to init driver here to avoid it getting caught by the garbage collector
 if __name__ == "__main__":
   path = GetDriverPath(sys.argv[1]) 
-  #path = "/Users/tomhollo/Documents/personal projects/RPAChallenge/chromedriver"
   print(path)
   driver = webdriver.Chrome(path)
   main(driver, "challenge2.xls")
