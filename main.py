@@ -7,15 +7,10 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import pandas as pd
 
-# presses start button
-def PressStartButton(driver):
-  startButton = driver.find_element_by_xpath("//*[text()='Start']")
-  startButton.send_keys(Keys.RETURN)
-
-#presses submit button
-def PressSubmitButton(driver):
-  submitButton = driver.find_element_by_xpath("//input[@type='submit']")
-  submitButton.send_keys(Keys.RETURN)
+# press a button!
+def PressButton(driver, xpath):
+  button = driver.find_element_by_xpath(xpath)
+  button.send_keys(Keys.RETURN)
 
 def GetDriverPath(fileName):
   f = open(fileName, "r")
@@ -60,23 +55,22 @@ def FillForm(driver, row):
   for element, data in zip(elements, row):
     element.send_keys(data)
 
-  # Submit
-  PressSubmitButton(driver)
+  # Hit Submit
+  PressButton(driver, "//input[@type='submit']")
 
 # main
 def main(driver, dataPath):
   # Load website
   driver.get("http://rpachallenge.com")
   # Hit start
-  PressStartButton(driver)
+  PressButton(driver, "//*[text()='Start']")
   # Get the input data from the excel file
   inputData = GetData(dataPath)
   # Input each row into the form
   for row in inputData:
     FillForm(driver, row)
 
-
-# need to init driver here to avoid it getting caught by the garbage collector
+# need to init driver here for some reason
 if __name__ == "__main__":
   path = GetDriverPath(sys.argv[1]) 
   print(path)
