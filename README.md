@@ -7,8 +7,9 @@ http://www.rpachallenge.com
 I am using python and selenium
 
 ### RUN
-
+```
 python3 main.py driverpath.txt -close
+```
 
 driverpath.txt is the path to your chromedriver, you need to add this to the directory.
 
@@ -24,7 +25,7 @@ also, downloading the file (and in this case converting it to xls) could be auto
 
 ### TODO
 
-Implement in python-rpa 
+- Implement in python-rpa 
 
 ### Helpful links
 
